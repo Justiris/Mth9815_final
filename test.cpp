@@ -87,7 +87,7 @@ void price_generation(const int N)
 	int xy = 0;
 	int z = 0;
 	string price;
-	std::ofstream log("price.txt", std::fstream::app);
+	std::ofstream log("price_sample.txt", std::fstream::app);
 	for (int j = 0; j < 6; j++)
 	{
 		for (int i = 0; i < N; i++)
@@ -135,7 +135,7 @@ void OrderBook_generation(const int N)
 	int xy = 0;
 	int z = 0;
 	string price;
-	std::ofstream log("marketdata.txt", std::fstream::app);
+	std::ofstream log("marketdata_sample.txt", std::fstream::app);
 	for (int j = 0; j < 6; j++)
 	{
 		for (int i = 0; i < N; i++)
@@ -188,7 +188,6 @@ void Inquiry_generation(const int N)
 }
 int main()
 {
-	//OrderBook_generation(10);
-	Inquiry_generation(10);
+	price_generation(1000000);
 	return 0;
 }

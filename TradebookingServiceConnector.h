@@ -51,33 +51,69 @@ void BondTradeBookingConnector::GetTradeFromFile(string address)
 		quantity = stoi(value[4]);
 		if (value[0] == "912828U40")
 		{
-			if (value[5] == "BUY") tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, BUY));
-			else tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, SELL));
+			if (value[5] == "BUY") {
+				Trade<Bond> trade(b2, price, value[1], value[2], quantity, BUY);
+				tradebookservice->OnMessage(trade);
+			}
+			else {
+				Trade<Bond> trade(b2, price, value[1], value[2], quantity, SELL);
+				tradebookservice->OnMessage(trade);
+			}
 		}
 		else if (value[0] == "912828U32")
 		{
-			if (value[5] == "BUY") tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, BUY));
-			else tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, SELL));
+			if (value[5] == "BUY") {
+				Trade<Bond> trade(b3, price, value[1], value[2], quantity, BUY);
+				tradebookservice->OnMessage(trade);
+			}
+			else {
+				Trade<Bond> trade(b3, price, value[1], value[2], quantity, SELL);
+				tradebookservice->OnMessage(trade);
+			}
 		}
 		else if (value[0] == "912828U65")
 		{
-			if (value[5] == "BUY") tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, BUY));
-			else tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, SELL));
+			if (value[5] == "BUY") {
+				Trade<Bond> trade(b5, price, value[1], value[2], quantity, BUY);
+				tradebookservice->OnMessage(trade);
+			}
+			else {
+				Trade<Bond> trade(b5, price, value[1], value[2], quantity, SELL);
+				tradebookservice->OnMessage(trade);
+			}
 		}
 		else if (value[0] == "912828U57")
 		{
-			if (value[5] == "BUY") tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, BUY));
-			else tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, SELL));
+			if (value[5] == "BUY") {
+				Trade<Bond> trade(b7, price, value[1], value[2], quantity, BUY);
+				tradebookservice->OnMessage(trade);
+			}
+			else {
+				Trade<Bond> trade(b7, price, value[1], value[2], quantity, SELL);
+				tradebookservice->OnMessage(trade);
+			}
 		}
 		else if (value[0] == "912828U24")
 		{
-			if (value[5] == "BUY") tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, BUY));
-			else tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, SELL));
+			if (value[5] == "BUY") {
+				Trade<Bond> trade(b10, price, value[1], value[2], quantity, BUY);
+				tradebookservice->OnMessage(trade);
+			}
+			else {
+				Trade<Bond> trade(b10, price, value[1], value[2], quantity, SELL);
+				tradebookservice->OnMessage(trade);
+			}
 		}
 		else if (value[0] == "912810RU4")
 		{
-			if (value[5] == "BUY") tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, BUY));
-			else tradebookservice->OnMessage(Trade<Bond>(b2, price, value[1], value[2], quantity, SELL));
+			if (value[5] == "BUY") {
+				Trade<Bond> trade(b30, price, value[1], value[2], quantity, BUY);
+				tradebookservice->OnMessage(trade);
+			}
+			else {
+				Trade<Bond> trade(b30, price, value[1], value[2], quantity, SELL);
+				tradebookservice->OnMessage(trade);
+			}
 		}
 	}
 }

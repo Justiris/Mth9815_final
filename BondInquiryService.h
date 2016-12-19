@@ -9,9 +9,9 @@
 class BondInquiryService : public InquiryService<Bond>
 {
 private:
-	map<string, Inquiry<Bond>> inquirybook;
-	vector<ServiceListener<Inquiry<Bond>>* > listener;
-	Connector<Inquiry<Bond>> *inquiryconnector;
+	map<string, Inquiry<Bond> > inquirybook;
+	vector<ServiceListener<Inquiry<Bond> >* > listener;
+	Connector<Inquiry<Bond> > *inquiryconnector;
 public:
 	//default constructor
 	BondInquiryService(){}
@@ -48,12 +48,12 @@ public:
 
 	// Add a listener to the Service for callbacks on add, remove, and update events
 	// for data to the Service.
-	virtual void AddListener(ServiceListener<Inquiry<Bond>> *_listener) {
+	virtual void AddListener(ServiceListener<Inquiry<Bond> > *_listener) {
 		listener.push_back(_listener);
 	}
 
 	// Get all listeners on the Service.
-	virtual const vector< ServiceListener<Inquiry<Bond>>* >& GetListeners() const {
+	virtual const vector< ServiceListener<Inquiry<Bond> >* >& GetListeners() const {
 		return listener;
 	}
 
@@ -66,7 +66,8 @@ public:
 
 void BondInquiryService::SendQuote(const string &inquiryId, double price)
 {
-	inquiryconnector->Publish(Inquiry<Bond>(inquiryId, inquirybook[inquiryId].GetProduct(), inquirybook[inquiryId].GetSide(), inquirybook[inquiryId].GetQuantity(), price, inquirybook[inquiryId].GetState()));
+	Inquiry<Bond> inqu(inquiryId, inquirybook[inquiryId].GetProduct(), inquirybook[inquiryId].GetSide(), inquirybook[inquiryId].GetQuantity(), price, inquirybook[inquiryId].GetState());
+	inquiryconnector->Publish(inqu);
 }
 
 void BondInquiryService::RejectInquiry(const string &inquiryId) {

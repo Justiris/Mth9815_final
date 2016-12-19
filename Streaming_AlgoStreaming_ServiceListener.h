@@ -18,7 +18,8 @@ public:
 	}
 	// Listener callback to process an add event to the Service
 	virtual void ProcessAdd(AlgoStream<Bond> &data) {
-		bondStreamingservice->PublishPrice(data.GetStreamingOrder());
+		PriceStream<Bond> pricestream = data.GetStreamingOrder();
+		bondStreamingservice->PublishPrice(pricestream);
 	};
 
 	// Listener callback to process a remove event to the Service

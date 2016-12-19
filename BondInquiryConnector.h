@@ -8,7 +8,9 @@
 #include <fstream>
 #include <string>
 
-class BondInquiryConnector : public Connector<Inquiry<Bond>>
+using namespace std;
+
+class BondInquiryConnector : public Connector<Inquiry<Bond> >
 {
 private:
 	BondInquiryService *inquiry;
@@ -20,7 +22,10 @@ public:
 	void GetInquiryFromFile(string address);
 
 	// Publish data to the Connector
-	virtual void Publish(Inquiry<Bond> &data);
+	virtual void Publish(Inquiry<Bond> &data) {
+		data.SetState(QUOTED);
+		inquiry->OnMessage(data);
+	}
 };
 
 BondInquiryConnector::BondInquiryConnector(BondInquiryService *source) {
@@ -53,46 +58,75 @@ void BondInquiryConnector::GetInquiryFromFile(string address)
 		value[4].erase(0, value[3].find('-') + 1);
 		price = stoi(token) + stoi(value[3].substr(0, 2)) / 32.0 + stoi(value[3].substr(2, 3)) / 256.0;
 		quantity = stoi(value[3]);
+		
 		if (value[1] == "912828U40")
 		{
-			if (value[2] == "BUY") inquiry->OnMessage(Inquiry<Bond>(value[0], b2, BUY, quantity, price, RECEIVED));
-			else inquiry->OnMessage(Inquiry<Bond>(value[0], b2, SELL, quantity, price, RECEIVED));
+			if (value[2] == "BUY") {
+				Inquiry<Bond> inqu(value[0], b2, BUY, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			else {
+				Inquiry<Bond> inqu(value[0], b2, SELL, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			
 		}
 		else if (value[1] == "912828U32")
 		{
-			if (value[2] == "BUY") inquiry->OnMessage(Inquiry<Bond>(value[0], b3, BUY, quantity, price, RECEIVED));
-			else inquiry->OnMessage(Inquiry<Bond>(value[0], b2, SELL, quantity, price, RECEIVED));
+			if (value[2] == "BUY") {
+				Inquiry<Bond> inqu(value[0], b3, BUY, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			else Inquiry<Bond> inqu(value[0], b3, SELL, quantity, price, RECEIVED);
 		}
 		else if (value[1] == "912828U65")
 		{
-			if (value[2] == "BUY") inquiry->OnMessage(Inquiry<Bond>(value[0], b5, BUY, quantity, price, RECEIVED));
-			else inquiry->OnMessage(Inquiry<Bond>(value[0], b2, SELL, quantity, price, RECEIVED));
+			if (value[2] == "BUY") {
+				Inquiry<Bond> inqu(value[0], b5, BUY, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			else {
+				Inquiry<Bond> inqu(value[0], b5, SELL, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu); }
+
 		}
 		else if (value[1] == "912828U57")
 		{
-			if (value[2] == "BUY") inquiry->OnMessage(Inquiry<Bond>(value[0], b7, BUY, quantity, price, RECEIVED));
-			else inquiry->OnMessage(Inquiry<Bond>(value[0], b2, SELL, quantity, price, RECEIVED));
+			if (value[2] == "BUY") {
+				Inquiry<Bond> inqu(value[0], b7, BUY, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			else {
+				Inquiry<Bond> inqu(value[0], b7, SELL, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
 		}
 		else if (value[1] == "912828U24")
 		{
-			if (value[2] == "BUY") inquiry->OnMessage(Inquiry<Bond>(value[0], b10, BUY, quantity, price, RECEIVED));
-			else inquiry->OnMessage(Inquiry<Bond>(value[0], b2, SELL, quantity, price, RECEIVED));
+			if (value[2] == "BUY") {
+				Inquiry<Bond> inqu(value[0], b10, BUY, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			else {
+				Inquiry<Bond> inqu(value[0], b10, SELL, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
 		}
 		else if (value[1] == "912810RU4")
 		{
-			if (value[2] == "BUY") inquiry->OnMessage(Inquiry<Bond>(value[0], b30, BUY, quantity, price, RECEIVED));
-			else inquiry->OnMessage(Inquiry<Bond>(value[0], b2, SELL, quantity, price, RECEIVED));
+			if (value[2] == "BUY") {
+				Inquiry<Bond> inqu(value[0], b30, BUY, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu);
+			}
+			else {Inquiry<Bond> inqu(value[0], b30, SELL, quantity, price, RECEIVED);
+				inquiry->OnMessage(inqu); }
 		}
+		
 	}
 }
 
 
 
-void BondInquiryConnector::Publish(Inquiry<Bond> &data)
-{
-	data.SetState(QUOTED);
-	inquiry->OnMessage(data);
-}
 
 #endif // !BONDINQUIRYCONNECTOR_HPP
 

@@ -53,27 +53,33 @@ void BondPricingConnector::GetPriceFromFile(string address)
 		spread = stoi(value[2]) / 256.0;
 		if (value[0] == "912828U40")
 		{
-			bondPricingservice->OnMessage(Price<Bond>(b2, price, spread));
+			Price<Bond> _price(b2, price, spread);
+			bondPricingservice->OnMessage(_price);
 		}
 		else if (value[0] == "912828U32")
 		{
-			bondPricingservice->OnMessage(Price<Bond>(b3, price, spread));
+			Price<Bond> _price(b3, price, spread);
+			bondPricingservice->OnMessage(_price);
 		}
 		else if (value[0] == "912828U65")
 		{
-			bondPricingservice->OnMessage(Price<Bond>(b5, price, spread));
+			Price<Bond> _price(b5, price, spread);
+			bondPricingservice->OnMessage(_price);
 		}
 		else if (value[0] == "912828U57")
 		{
-			bondPricingservice->OnMessage(Price<Bond>(b7, price, spread));
+			Price<Bond> _price(b7, price, spread);
+			bondPricingservice->OnMessage(_price);
 		}
 		else if (value[0] == "912828U24")
 		{
-			bondPricingservice->OnMessage(Price<Bond>(b10, price, spread));
+			Price<Bond> _price(b10, price, spread);
+			bondPricingservice->OnMessage(_price);
 		}
 		else if (value[0] == "912810RU4")
 		{
-			bondPricingservice->OnMessage(Price<Bond>(b30, price, spread));
+			Price<Bond> _price(b30, price, spread);
+			bondPricingservice->OnMessage(_price);
 		}
 	}
 

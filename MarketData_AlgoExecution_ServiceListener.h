@@ -26,7 +26,8 @@ public:
 			if (price < data.GetBidStack(i).GetPrice()) count_bid = i;
 		}
 		Order order = data.GetBidStack(count_bid);
-		algoexecution->ExecuteOrder(AlgoExecution<Bond>(data.GetProduct(), order.GetSide(), "xxx", FOK, order.GetPrice(), order.GetQuantity(), 0, "XXXX", 1));
+		AlgoExecution<Bond> algoexe(data.GetProduct(), order.GetSide(), "xxx", FOK, order.GetPrice(), order.GetQuantity(), 0, "XXXX", 1);
+		algoexecution->ExecuteOrder(algoexe);
 	}
 
 	// Listener callback to process a remove event to the Service
