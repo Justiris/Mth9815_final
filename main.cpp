@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include "BondInquiryConnector.h"
 #include "BondInquiryService.h"
 #include "BondInquiryServiceListener.h"
@@ -22,12 +24,12 @@
 #include "Position_tradebooking_listener.h"
 #include "RiskPositionListener.h"
 #include "TradebookingServiceConnector.h"
-#include <iostream>
-#include <string>
+
 
 using namespace std;
 
-int main()
+//test tradebooking, position and risk service
+void test_1()
 {
 	// Init the BondTradeBookingService
 	BondTradeBookingService b_tradebooking_s;
@@ -38,6 +40,35 @@ int main()
 	// Init the BondRiskService
 	BondRiskService b_risk_s;
 
+	//tradebooking,position and risk
+	//define servicelistener
+	PositionTradebookingListener position_trading_listener(&b_position_s);
+	RiskPositionListener risk_position_listener(&b_risk_s);
+
+	//add servicelistener
+	b_tradebooking_s.AddListener(&position_trading_listener);
+	b_position_s.AddListener(&risk_position_listener);
+
+	//set up historical service for position
+	BondHistoricalService<Position> b_historicaldata_s_position("Position.txt");
+	HistoricalServiceListener<Position> b_historicaldata_listener_position(&b_historicaldata_s_position);
+	b_position_s.AddListener(&b_historicaldata_listener_position);
+
+	//set up historical service for risk
+	BondHistoricalService<PV01> b_historicaldata_s_risk("Risk.txt");
+	HistoricalServiceListener<PV01> b_historicaldata_listener_risk(&b_historicaldata_s_risk);
+	b_risk_s.AddListener(&b_historicaldata_listener_risk);
+
+	// Init the BondTradebookingConnectorRead which can flow the tradebooking data
+	// from trade.txt to the BondInquiryService
+
+	//string trading_file{ "trades.txt" };
+	BondTradeBookingConnector b_tradebooking_connector(&b_tradebooking_s);
+	b_tradebooking_connector.GetTradeFromFile("trades.txt");
+}
+
+void test_rest()
+{
 	// Init the BondPricingService
 	BondPricingService b_pricing_s;
 
@@ -62,26 +93,6 @@ int main()
 	/****************************
 	* Listener Register and Add *
 	****************************/
-
-	//tradebooking,position and risk
-	//define servicelistener
-	PositionTradebookingListener position_trading_listener(&b_position_s);
-	RiskPositionListener risk_position_listener(&b_risk_s);
-
-	//add servicelistener
-	b_tradebooking_s.AddListener(&position_trading_listener);
-	b_position_s.AddListener(&risk_position_listener);
-
-	//set up historical service for position
-	BondHistoricalService<Position> b_historicaldata_s_position("Position.txt");
-	HistoricalServiceListener<Position> b_historicaldata_listener_position(&b_historicaldata_s_position);
-	b_position_s.AddListener(&b_historicaldata_listener_position);
-
-	//set up historical service for risk
-	BondHistoricalService<PV01> b_historicaldata_s_risk("Risk.txt");
-	HistoricalServiceListener<PV01> b_historicaldata_listener_risk(&b_historicaldata_s_risk);
-	b_risk_s.AddListener(&b_historicaldata_listener_risk);
-
 
 	//marketdata,algostreaming and bondstreaming
 	//define servicelistener
@@ -122,34 +133,29 @@ int main()
 	* Connector Register and flow in data*
 	*************************************/
 
-	// Init the BondTradebookingConnectorRead which can flow the tradebooking data
-	// from trade.txt to the BondInquiryService
 
-	string trading_file{ "trades.txt" };
-	BondTradeBookingConnector b_tradebooking_connector(&b_tradebooking_s);
-	b_tradebooking_connector.GetTradeFromFile(trading_file);
 
 
 	// Init the BondmarketdataConnectorRead which can flow the marketdata data
 	// from marketdata.txt to the BondInquiryService
 
-	string marketdata_file{ "marketdata.txt" };
+	//string marketdata_file{ "marketdata.txt" };
 	BondMarketDataConnector b_marketdata_connector(&b_marketdata_s);
-	b_marketdata_connector.GetMarketDataFromFile(marketdata_file);
+	b_marketdata_connector.GetMarketDataFromFile("marketdata.txt");
 
 
 
 	// Init the BondPricingConnectorRead which can flow the price data
 	// from price.txt to the BondInquiryService
-	string price_file{ "price.txt" };
+	//string price_file{ "price.txt" };
 	BondPricingConnector b_pricing_connector(&b_pricing_s);
-	b_pricing_connector.GetPriceFromFile(price_file);
+	b_pricing_connector.GetPriceFromFile("price.txt");
 
 
 	// Init the BondInquiryConnectorWrite and add it to the BondInquiryService
 	// So that the inquiries with QUOTED state will be dealed and sent back to
 	// BondInquiryService with DONE state
-	string inquiries_file{ "inquirys.txt" };
+	//string inquiries_file{ "inquirys.txt" };
 	BondInquiryConnector b_inquiry_connector(&b_inquiry_s);
 	//b_inquiry_s.SetConnector(&b_inquiry_connector_write);
 
@@ -157,6 +163,12 @@ int main()
 	// from inquiry.txt to the BondInquiryService
 
 
-	b_inquiry_connector.GetInquiryFromFile(inquiries_file);
+	b_inquiry_connector.GetInquiryFromFile("inquirys.txt");
+}
+
+int main()
+{
+	//test_1();
+	test_rest();
 	return 0;
 }

@@ -34,9 +34,9 @@ public:
 	//get the service listeners
 	const vector< ServiceListener<OrderBook<Bond>>*>& GetListeners() const { return listener; };
 	//get the best bidoffer for a specific product
-	const BidOffer& GetBestBidOffer(const string &productId);
+	const BidOffer GetBestBidOffer(const string &productId);
 	//combine all orders and get a aggregae orderbook
-	const OrderBook<Bond>& AggregateDepth(const string &productId);
+	const OrderBook<Bond> AggregateDepth(const string &productId);
 
 	//assignment operator
 	BondMarketDataService& operator=(const BondMarketDataService& source) {
@@ -57,7 +57,7 @@ void BondMarketDataService::OnMessage(OrderBook<Bond>& data)
 }
 
 
-const BidOffer& BondMarketDataService::GetBestBidOffer(const string& productId)
+const BidOffer BondMarketDataService::GetBestBidOffer(const string& productId)
 {
 	double price = orderbook[productId].GetBidStack(0).GetPrice();
 	int count_bid = 0;
@@ -71,10 +71,11 @@ const BidOffer& BondMarketDataService::GetBestBidOffer(const string& productId)
 	{
 		if (price < orderbook[productId].GetOfferStack(i).GetPrice()) count_offer = i;
 	}
-	return BidOffer(orderbook[productId].GetBidStack(count_bid), orderbook[productId].GetOfferStack(count_offer));
+	BidOffer bidoffer(orderbook[productId].GetBidStack(count_bid), orderbook[productId].GetOfferStack(count_offer));
+	return bidoffer;
 }
 
-const OrderBook<Bond>& BondMarketDataService::AggregateDepth(const string &productId)
+const OrderBook<Bond> BondMarketDataService::AggregateDepth(const string &productId)
 {
 	map<double, Order> bid_orderbook;
 	double price;
@@ -95,7 +96,7 @@ const OrderBook<Bond>& BondMarketDataService::AggregateDepth(const string &produ
 	for (auto iter = bid_orderbook.begin(); iter != bid_orderbook.end(); iter++) bidstack.push_back((*iter).second);
 	vector<Order> offerstack;
 	for (auto iter = offer_orderbook.begin(); iter != offer_orderbook.end(); iter++) offerstack.push_back((*iter).second);
-	OrderBook<Bond>data(orderbook[productId].GetProduct(), bidstack, offerstack);
-	return data;
+	OrderBook<Bond> orders(orderbook[productId].GetProduct(), bidstack, offerstack);
+	return orders;
 }
 #endif
